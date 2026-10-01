@@ -1,0 +1,1048 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>CivicManager Pro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* Layout: barra superiore indigo con schede, contenuto a colonna unica, tabelle in contenitori scorrevoli. */
+  :root {
+    --bg: #f3f4f9;
+    --surface: #ffffff;
+    --line: #dfe1ee;
+    --fg: #1c1e33;
+    --muted: #61657f;
+    --accent: #3f46c8;
+    --accent-ink: #ffffff;
+    --accent-soft: #e9eafc;
+    --head: #1d1f6b;
+    --head-fg: #ffffff;
+    --head-mute: #b9bcf2;
+    --head-line: #3a3d94;
+    --good: #1c7449;
+    --good-soft: #e0f3e9;
+    --warn: #8f5500;
+    --warn-soft: #fcefd6;
+    --bad: #b02d47;
+    --bad-soft: #fbe3e8;
+    --font-display: 'Bricolage Grotesque', 'IBM Plex Sans', system-ui, sans-serif;
+    --font-body: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #11121b;
+      --surface: #1a1c29;
+      --line: #2b2e42;
+      --fg: #e8e9f4;
+      --muted: #9a9eb8;
+      --accent: #9097ff;
+      --accent-ink: #10112a;
+      --accent-soft: #262a52;
+      --head: #0b0c1d;
+      --head-line: #25284f;
+      --good: #62d39b;
+      --good-soft: #163128;
+      --warn: #f0b85a;
+      --warn-soft: #3a2b10;
+      --bad: #ff8ea3;
+      --bad-soft: #3b1824;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #11121b;
+    --surface: #1a1c29;
+    --line: #2b2e42;
+    --fg: #e8e9f4;
+    --muted: #9a9eb8;
+    --accent: #9097ff;
+    --accent-ink: #10112a;
+    --accent-soft: #262a52;
+    --head: #0b0c1d;
+    --head-line: #25284f;
+    --good: #62d39b;
+    --good-soft: #163128;
+    --warn: #f0b85a;
+    --warn-soft: #3a2b10;
+    --bad: #ff8ea3;
+    --bad-soft: #3b1824;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { min-height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .wrap { width: 100%; max-width: 1180px; margin-inline: auto; padding-inline: 16px; }
+
+  /* Header */
+  .top { background: var(--head); color: var(--head-fg); }
+  .top-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding-block: 16px 12px; }
+  .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .mark {
+    width: 40px; height: 40px; border-radius: 10px; flex: none;
+    display: grid; place-items: center;
+    background: var(--accent); color: var(--accent-ink);
+    font-family: var(--font-display); font-weight: 700; font-size: 16px; letter-spacing: -0.02em;
+  }
+  .brand h1 { margin: 0; font-family: var(--font-display); font-size: 20px; line-height: 1.15; letter-spacing: -0.01em; }
+  .brand p { margin: 0; font-size: 12px; color: var(--head-mute); }
+  .top-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn-ghost {
+    background: transparent; border: 1px solid var(--head-line); color: var(--head-fg);
+    padding: 7px 12px; border-radius: 8px; font-size: 12px; font-weight: 500;
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.08); }
+  nav.tabs { display: flex; gap: 4px; overflow-x: auto; border-top: 1px solid var(--head-line); }
+  .tab {
+    background: none; border: 0; border-bottom: 3px solid transparent;
+    color: var(--head-mute); padding: 12px 14px; font-size: 13px; font-weight: 500; white-space: nowrap;
+  }
+  .tab:hover { color: var(--head-fg); }
+  .tab[aria-selected="true"] { color: var(--head-fg); border-bottom-color: #a9aeff; }
+
+  main { padding-block: 24px 48px; display: flex; flex-direction: column; gap: 20px; }
+  section[hidden] { display: none !important; }
+  section.pane { display: flex; flex-direction: column; gap: 20px; }
+
+  /* Surfaces */
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; min-width: 0; }
+  .bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 16px; }
+  .bar h2 { margin: 0; font-family: var(--font-display); font-size: 18px; letter-spacing: -0.01em; }
+  .bar p { margin: 2px 0 0; font-size: 12px; color: var(--muted); }
+  .bar-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+  .btn {
+    background: var(--accent); color: var(--accent-ink); border: 1px solid transparent;
+    padding: 8px 14px; border-radius: 8px; font-weight: 600; font-size: 13px;
+  }
+  .btn:hover { filter: brightness(1.08); }
+  .btn-quiet { background: transparent; color: var(--fg); border: 1px solid var(--line); }
+  .btn-quiet:hover { background: var(--accent-soft); filter: none; }
+  .btn-danger { background: var(--bad); color: #fff; }
+  .link-btn { background: none; border: 0; padding: 2px 0; color: var(--accent); font-size: 12px; font-weight: 600; }
+  .link-btn:hover { text-decoration: underline; }
+  .link-btn.mute { color: var(--muted); }
+
+  /* Stats */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+  .stat { padding: 16px; display: flex; flex-direction: column; gap: 4px; }
+  .stat .k { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  .stat .v { font-family: var(--font-mono); font-size: 26px; font-weight: 500; font-variant-numeric: tabular-nums; line-height: 1.2; }
+  .stat .s { font-size: 12px; color: var(--muted); }
+  .pos { color: var(--good); }
+  .neg { color: var(--bad); }
+
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  .card-pad { padding: 20px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  .card-pad h3 { margin: 0; font-family: var(--font-display); font-size: 16px; }
+  .card-pad p { margin: 0; color: var(--muted); font-size: 13px; max-width: 65ch; }
+  .row-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .deadlines { list-style: none; margin: 0; padding: 0; max-height: 280px; overflow-y: auto; }
+  .deadlines li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); }
+  .deadlines li:first-child { border-top: 0; }
+  .deadlines .who { font-weight: 600; }
+  .deadlines .when { font-size: 12px; color: var(--muted); }
+  .empty { padding: 20px; text-align: center; color: var(--muted); font-size: 13px; }
+
+  .demo-note {
+    display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between;
+    padding: 12px 16px; border-radius: 12px; background: var(--accent-soft); border: 1px solid var(--line); font-size: 13px;
+  }
+
+  /* Tables */
+  .scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; text-align: left; }
+  th { padding: 12px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); background: var(--bg); border-bottom: 1px solid var(--line); white-space: nowrap; }
+  td { padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody tr:hover { background: color-mix(in srgb, var(--accent-soft) 45%, transparent); }
+  tfoot td { background: var(--bg); border-top: 1px solid var(--line); border-bottom: 0; font-weight: 600; }
+  .num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .sub { font-size: 12px; color: var(--muted); }
+  .strong { font-weight: 600; }
+  .center { text-align: center; }
+
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+  .b-good { background: var(--good-soft); color: var(--good); }
+  .b-warn { background: var(--warn-soft); color: var(--warn); }
+  .b-bad { background: var(--bad-soft); color: var(--bad); }
+  .b-info { background: var(--accent-soft); color: var(--accent); }
+  .b-mute { background: var(--bg); color: var(--muted); border: 1px solid var(--line); }
+
+  .icon-btn { background: none; border: 0; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; color: var(--accent); }
+  .icon-btn:hover { background: var(--accent-soft); }
+  .icon-btn.del { color: var(--bad); }
+  .icon-btn.del:hover { background: var(--bad-soft); }
+
+  .presence-head { display: flex; flex-wrap: wrap; gap: 8px 16px; justify-content: space-between; align-items: center; padding: 12px 16px; background: var(--bg); border-bottom: 1px solid var(--line); font-size: 12px; font-weight: 600; }
+  .presence-head .sep { color: var(--line); margin-inline: 6px; }
+  input[type="checkbox"].pres { width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer; }
+
+  /* Forms */
+  .field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .field label { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  .in {
+    width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; min-width: 0;
+  }
+  .in:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: var(--accent); }
+  .note-in { font-size: 12px; padding: 6px 10px; min-width: 180px; }
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .form-foot { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .err { color: var(--bad); font-size: 12px; min-height: 16px; margin: 0; }
+
+  /* Modal */
+  .overlay { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(8, 9, 24, 0.55); }
+  .modal { width: 100%; max-width: 520px; max-height: 92%; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+  .modal-wide { max-width: 640px; }
+  .modal-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+  .modal-head h3 { margin: 0; font-family: var(--font-display); font-size: 18px; }
+  .x { background: none; border: 0; font-size: 22px; line-height: 1; padding: 2px 8px; color: var(--muted); border-radius: 6px; }
+  .x:hover { background: var(--bg); color: var(--fg); }
+  .modal p { margin: 0; color: var(--muted); font-size: 13px; }
+  textarea.in { font-family: var(--font-mono); font-size: 12px; min-height: 200px; resize: vertical; white-space: pre; }
+
+  .toast {
+    position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(20px + env(safe-area-inset-bottom, 0px)); z-index: 60;
+    background: var(--fg); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-size: 13px; font-weight: 500; max-width: calc(100% - 32px);
+  }
+
+  @media (max-width: 520px) {
+    .stat .v { font-size: 22px; }
+    th, td { padding: 10px 12px; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .btn, .tab, .btn-ghost, .icon-btn { transition: background-color .15s, filter .15s, color .15s; }
+  }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="top-row">
+      <div class="brand">
+        <div class="mark" aria-hidden="true">CM</div>
+        <div>
+          <h1>CivicManager Pro</h1>
+          <p>Gestione Associazione e Servizio Civile</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="btn-ghost" type="button" data-act="open-backup">Backup e ripristino</button>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Sezioni">
+      <button class="tab" role="tab" id="btn-dashboard" data-tab="dashboard" aria-selected="true">Dashboard</button>
+      <button class="tab" role="tab" id="btn-ragazzi" data-tab="ragazzi" aria-selected="false">Ragazzi e volontari</button>
+      <button class="tab" role="tab" id="btn-presenze" data-tab="presenze" aria-selected="false">Presenze giornaliere</button>
+      <button class="tab" role="tab" id="btn-cassa" data-tab="cassa" aria-selected="false">Cassa e bilancio</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- DASHBOARD -->
+  <section id="tab-dashboard" class="pane">
+    <div id="demo-note" class="demo-note" hidden>
+      <span>Stai vedendo dati di esempio. Svuotali per iniziare con i tuoi.</span>
+      <button class="link-btn" type="button" data-act="clear-all">Svuota tutto e inizia</button>
+    </div>
+
+    <div class="stats">
+      <div class="panel stat">
+        <span class="k">Ragazzi attivi</span>
+        <span class="v" id="stat-attivi">0</span>
+        <span class="s" id="stat-attivi-sub"></span>
+      </div>
+      <div class="panel stat">
+        <span class="k">Totale iscritti</span>
+        <span class="v" id="stat-totale">0</span>
+        <span class="s">Compresi completati e ritirati</span>
+      </div>
+      <div class="panel stat">
+        <span class="k">Presenze oggi</span>
+        <span class="v" id="stat-presenze-oggi">0</span>
+        <span class="s" id="stat-presenze-sub"></span>
+      </div>
+      <div class="panel stat">
+        <span class="k">Saldo cassa</span>
+        <span class="v" id="stat-saldo">€ 0,00</span>
+        <span class="s" id="stat-saldo-sub"></span>
+      </div>
+    </div>
+
+    <div class="two">
+      <div class="panel card-pad">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+          <h3>Scadenze del servizio</h3>
+          <span class="badge b-mute">Prossimi 60 giorni</span>
+        </div>
+        <ul id="dashboard-scadenze" class="deadlines"></ul>
+      </div>
+      <div class="panel card-pad">
+        <h3>Come funziona</h3>
+        <p>Registra i volontari, segna le presenze di ogni giorno e tieni il registro di cassa. I dati restano nel browser che stai usando. Per spostarli su un altro dispositivo o tenerne una copia, usa Backup e ripristino.</p>
+        <div class="row-actions">
+          <button class="btn" type="button" data-act="new-ragazzo">Aggiungi ragazzo</button>
+          <button class="btn btn-quiet" type="button" data-act="new-cassa">Nuovo movimento</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RAGAZZI -->
+  <section id="tab-ragazzi" class="pane" hidden>
+    <div class="panel bar">
+      <div>
+        <h2>Anagrafica ragazzi e volontari</h2>
+        <p>Progetti, periodi di servizio e recapiti</p>
+      </div>
+      <div class="bar-actions">
+        <button class="btn btn-quiet" type="button" data-act="export-ragazzi">Copia per Excel</button>
+        <button class="btn" type="button" data-act="new-ragazzo">Nuovo ragazzo</button>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Nome e cognome</th>
+              <th>Progetto</th>
+              <th>Arrivo / Partenza</th>
+              <th>Contatti</th>
+              <th>Stato</th>
+              <th class="num">Azioni</th>
+            </tr>
+          </thead>
+          <tbody id="ragazzi-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRESENZE -->
+  <section id="tab-presenze" class="pane" hidden>
+    <div class="panel bar">
+      <div>
+        <h2>Registro presenze giornaliere</h2>
+        <p>Scegli il giorno e segna chi è presente. Le modifiche si salvano subito.</p>
+      </div>
+      <div class="bar-actions">
+        <input type="date" id="presenze-data-input" class="in" style="width:auto" aria-label="Data delle presenze">
+        <button class="btn" type="button" data-act="save-presenze">Salva presenze</button>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="presence-head">
+        <span id="presenze-summary-text">Presenti: 0 / 0</span>
+        <span>
+          <button class="link-btn" type="button" data-act="mark-all" data-val="1">Segna tutti presenti</button><span class="sep">|</span><button class="link-btn mute" type="button" data-act="mark-all" data-val="0">Segna tutti assenti</button>
+        </span>
+      </div>
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Ragazzo</th>
+              <th>Progetto</th>
+              <th class="center">Presente</th>
+              <th>Note del giorno</th>
+            </tr>
+          </thead>
+          <tbody id="presenze-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASSA -->
+  <section id="tab-cassa" class="pane" hidden>
+    <div class="panel bar">
+      <div>
+        <h2>Cassa e bilancio</h2>
+        <p>Entrate, uscite e saldo sempre aggiornato</p>
+      </div>
+      <div class="bar-actions">
+        <button class="btn btn-quiet" type="button" data-act="export-cassa">Copia per Excel</button>
+        <button class="btn" type="button" data-act="new-cassa">Nuovo movimento</button>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="panel stat"><span class="k">Entrate</span><span class="v pos" id="cassa-entrate">€ 0,00</span></div>
+      <div class="panel stat"><span class="k">Uscite</span><span class="v neg" id="cassa-uscite">€ 0,00</span></div>
+    </div>
+    <div class="panel">
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Tipo</th>
+              <th>Categoria</th>
+              <th>Descrizione</th>
+              <th class="num">Importo</th>
+              <th class="num">Azioni</th>
+            </tr>
+          </thead>
+          <tbody id="cassa-table-body"></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4" class="num">Saldo totale cassa</td>
+              <td id="cassa-saldo-totale" class="num">€ 0,00</td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- MODALE RAGAZZO -->
+<div id="modal-ragazzo" class="overlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-ragazzo-title">
+    <div class="modal-head">
+      <h3 id="modal-ragazzo-title">Aggiungi nuovo ragazzo</h3>
+      <button class="x" type="button" data-act="close-modal" aria-label="Chiudi">&times;</button>
+    </div>
+    <form id="form-ragazzo" class="form-grid" style="grid-template-columns:1fr">
+      <input type="hidden" id="ragazzo-id">
+      <div class="field">
+        <label for="ragazzo-nome">Nome e cognome *</label>
+        <input class="in" type="text" id="ragazzo-nome" required placeholder="Es. Mario Rossi">
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label for="ragazzo-progetto">Progetto / servizio *</label>
+          <input class="in" type="text" id="ragazzo-progetto" required placeholder="Es. Progetto Giovani 2026">
+        </div>
+        <div class="field">
+          <label for="ragazzo-stato">Stato</label>
+          <select class="in" id="ragazzo-stato">
+            <option value="Attivo">Attivo</option>
+            <option value="In attesa">In attesa</option>
+            <option value="Completato">Completato</option>
+            <option value="Ritirato">Ritirato</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label for="ragazzo-arrivo">Data arrivo *</label>
+          <input class="in" type="date" id="ragazzo-arrivo" required>
+        </div>
+        <div class="field">
+          <label for="ragazzo-partenza">Data partenza (fine)</label>
+          <input class="in" type="date" id="ragazzo-partenza">
+        </div>
+      </div>
+      <div class="field">
+        <label for="ragazzo-contatti">Contatti (email / telefono)</label>
+        <input class="in" type="text" id="ragazzo-contatti" placeholder="Es. mario@email.com - 3331234567">
+      </div>
+      <p class="err" id="ragazzo-err" role="alert"></p>
+      <div class="form-foot">
+        <button class="btn btn-quiet" type="button" data-act="close-modal">Annulla</button>
+        <button class="btn" type="submit">Salva ragazzo</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODALE CASSA -->
+<div id="modal-cassa" class="overlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-cassa-title">
+    <div class="modal-head">
+      <h3 id="modal-cassa-title">Nuovo movimento di cassa</h3>
+      <button class="x" type="button" data-act="close-modal" aria-label="Chiudi">&times;</button>
+    </div>
+    <form id="form-cassa" class="form-grid" style="grid-template-columns:1fr">
+      <div class="form-grid">
+        <div class="field">
+          <label for="cassa-tipo">Tipo movimento *</label>
+          <select class="in" id="cassa-tipo">
+            <option value="Entrata">Entrata (+)</option>
+            <option value="Uscita">Uscita (-)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="cassa-data">Data *</label>
+          <input class="in" type="date" id="cassa-data" required>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label for="cassa-categoria">Categoria *</label>
+          <input class="in" type="text" id="cassa-categoria" required placeholder="Es. Contributo, Rimborso, Materiale">
+        </div>
+        <div class="field">
+          <label for="cassa-importo">Importo (€) *</label>
+          <input class="in" type="number" step="0.01" min="0.01" id="cassa-importo" required placeholder="0,00" inputmode="decimal">
+        </div>
+      </div>
+      <div class="field">
+        <label for="cassa-descrizione">Descrizione *</label>
+        <input class="in" type="text" id="cassa-descrizione" required placeholder="Es. Acquisto materiale didattico per attività">
+      </div>
+      <div class="form-foot">
+        <button class="btn btn-quiet" type="button" data-act="close-modal">Annulla</button>
+        <button class="btn" type="submit">Registra movimento</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODALE CONFERMA -->
+<div id="modal-confirm" class="overlay" hidden>
+  <div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="cf-title" style="max-width:420px">
+    <div class="modal-head"><h3 id="cf-title">Conferma</h3></div>
+    <p id="cf-msg" style="color:var(--fg)"></p>
+    <div class="form-foot" style="border-top:0;padding-top:0">
+      <button class="btn btn-quiet" type="button" data-act="cf-no">Annulla</button>
+      <button class="btn btn-danger" type="button" data-act="cf-yes">Elimina</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODALE DATI (backup, ripristino, copia per Excel) -->
+<div id="modal-data" class="overlay" hidden>
+  <div class="modal modal-wide" role="dialog" aria-modal="true" aria-labelledby="dd-title">
+    <div class="modal-head">
+      <h3 id="dd-title">Dati</h3>
+      <button class="x" type="button" data-act="close-modal" aria-label="Chiudi">&times;</button>
+    </div>
+    <p id="dd-hint"></p>
+    <textarea class="in" id="dd-text" spellcheck="false" aria-label="Contenuto dati"></textarea>
+    <div id="dd-file-row" class="field" hidden>
+      <label for="dd-file">Oppure carica un file di backup (.json)</label>
+      <input class="in" type="file" id="dd-file" accept=".json,application/json">
+    </div>
+    <p class="err" id="dd-err" role="alert"></p>
+    <div class="form-foot">
+      <button class="btn btn-quiet" type="button" data-act="close-modal">Chiudi</button>
+      <button class="btn btn-quiet" type="button" id="dd-restore" data-act="restore" hidden>Ripristina da questo testo</button>
+      <button class="btn" type="button" data-act="copy-data">Copia</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast" role="status" hidden></div>
+
+<script>
+(function () {
+  'use strict';
+  var KEY = 'civic_manager_data';
+  var $ = function (id) { return document.getElementById(id); };
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function eur(n) {
+    return '€ ' + Number(n).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function fmtDate(d) {
+    if (!d) return '–';
+    var p = String(d).split('-');
+    return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : d;
+  }
+  function todayStr() {
+    var t = new Date();
+    var m = String(t.getMonth() + 1).padStart(2, '0');
+    var d = String(t.getDate()).padStart(2, '0');
+    return t.getFullYear() + '-' + m + '-' + d;
+  }
+  function daysUntil(dateStr) {
+    var a = new Date(dateStr + 'T00:00:00');
+    var b = new Date(todayStr() + 'T00:00:00');
+    return Math.round((a - b) / 86400000);
+  }
+
+  function seed() {
+    return {
+      demo: true,
+      ragazzi: [
+        { id: '1', nome: 'Giulia Bianchi', progetto: 'Servizio Civile Digitale', arrivo: '2026-10-01', partenza: '2027-10-01', contatti: 'giulia@email.com - 3381122334', stato: 'Attivo' },
+        { id: '2', nome: 'Marco Neri', progetto: 'Progetto Accoglienza Giovani', arrivo: '2026-03-15', partenza: '2026-11-20', contatti: 'marco.n@email.com - 3409988776', stato: 'Attivo' },
+        { id: '3', nome: 'Sofia Romano', progetto: 'Servizio Civile Ambientale', arrivo: '2026-06-01', partenza: '2026-10-31', contatti: 'sofia.r@email.com - 3475544332', stato: 'Attivo' }
+      ],
+      presenze: {},
+      cassa: [
+        { id: 'c1', data: '2026-01-10', tipo: 'Entrata', categoria: 'Contributo ente', descrizione: 'Fondo regionale avviamento progetti', importo: 5000.00 },
+        { id: 'c2', data: '2026-01-15', tipo: 'Uscita', categoria: 'Materiale ufficio', descrizione: 'Cancelleria e risme carta', importo: 125.50 },
+        { id: 'c3', data: '2026-02-01', tipo: 'Entrata', categoria: 'Donazione', descrizione: 'Contributo sostenitori associazione', importo: 350.00 },
+        { id: 'c4', data: '2026-02-10', tipo: 'Uscita', categoria: 'Rimborsi spese', descrizione: 'Rimborso viaggio volontari', importo: 82.30 }
+      ]
+    };
+  }
+
+  var state = seed();
+  var storageOk = true;
+
+  function load() {
+    try {
+      var s = localStorage.getItem(KEY);
+      if (s) {
+        var p = JSON.parse(s);
+        if (p && Array.isArray(p.ragazzi) && Array.isArray(p.cassa)) {
+          p.presenze = p.presenze || {};
+          state = p;
+        }
+      }
+    } catch (e) { storageOk = false; }
+  }
+  function persist() {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); }
+    catch (e) { storageOk = false; }
+  }
+
+  var toastTimer = null;
+  function toast(msg) {
+    var t = $('toast');
+    t.textContent = msg;
+    t.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.hidden = true; }, 2800);
+  }
+
+  /* ---------- Tabs ---------- */
+  var TABS = ['dashboard', 'ragazzi', 'presenze', 'cassa'];
+  function switchTab(id) {
+    TABS.forEach(function (t) {
+      $('tab-' + t).hidden = (t !== id);
+      $('btn-' + t).setAttribute('aria-selected', t === id ? 'true' : 'false');
+    });
+    if (id === 'presenze') initPresenzeDate();
+  }
+
+  /* ---------- Calcoli ---------- */
+  function cassaTotals() {
+    var e = 0, u = 0;
+    state.cassa.forEach(function (c) {
+      if (c.tipo === 'Entrata') e += Number(c.importo); else u += Number(c.importo);
+    });
+    return { entrate: e, uscite: u, saldo: e - u };
+  }
+  function attivi() { return state.ragazzi.filter(function (r) { return r.stato === 'Attivo'; }); }
+  function getP(date, id) {
+    var d = state.presenze[date];
+    return (d && d[id]) ? d[id] : { presente: true, note: '' };
+  }
+  function setP(date, id, patch) {
+    if (!state.presenze[date]) state.presenze[date] = {};
+    var cur = getP(date, id);
+    state.presenze[date][id] = { presente: patch.presente != null ? patch.presente : cur.presente, note: patch.note != null ? patch.note : cur.note };
+  }
+
+  /* ---------- Render ---------- */
+  function renderAll() {
+    renderDashboard();
+    renderRagazzi();
+    renderCassa();
+    if (!$('tab-presenze').hidden) renderPresenze();
+  }
+
+  function renderDashboard() {
+    var act = attivi();
+    $('stat-attivi').textContent = act.length;
+    $('stat-attivi-sub').textContent = act.length === 1 ? 'Un volontario in servizio' : act.length + ' volontari in servizio';
+    $('stat-totale').textContent = state.ragazzi.length;
+
+    var tot = cassaTotals();
+    var se = $('stat-saldo');
+    se.textContent = eur(tot.saldo);
+    se.className = 'v ' + (tot.saldo >= 0 ? 'pos' : 'neg');
+    $('stat-saldo-sub').textContent = 'Entrate ' + eur(tot.entrate) + ' · Uscite ' + eur(tot.uscite);
+
+    var today = todayStr();
+    var saved = state.presenze[today];
+    var present = 0, registered = 0;
+    if (saved) {
+      act.forEach(function (r) {
+        if (saved[r.id]) { registered++; if (saved[r.id].presente) present++; }
+      });
+    }
+    $('stat-presenze-oggi').textContent = present;
+    $('stat-presenze-sub').textContent = registered ? 'su ' + act.length + ' attivi' : 'Presenze di oggi non ancora salvate';
+
+    $('demo-note').hidden = !state.demo;
+
+    var ul = $('dashboard-scadenze');
+    var items = [];
+    act.forEach(function (r) {
+      if (!r.partenza) return;
+      var d = daysUntil(r.partenza);
+      if (d <= 60) items.push({ r: r, d: d });
+    });
+    items.sort(function (a, b) { return a.d - b.d; });
+    if (!act.length) {
+      ul.innerHTML = '<li class="empty" style="display:block;border:0">Nessun ragazzo attivo registrato.</li>';
+      return;
+    }
+    if (!items.length) {
+      ul.innerHTML = '<li class="empty" style="display:block;border:0">Nessuna scadenza nei prossimi 60 giorni.</li>';
+      return;
+    }
+    ul.innerHTML = items.map(function (it) {
+      var label, cls;
+      if (it.d < 0) { label = 'Scaduto da ' + Math.abs(it.d) + (Math.abs(it.d) === 1 ? ' giorno' : ' giorni'); cls = 'b-bad'; }
+      else if (it.d === 0) { label = 'Scade oggi'; cls = 'b-bad'; }
+      else if (it.d <= 30) { label = 'Tra ' + it.d + (it.d === 1 ? ' giorno' : ' giorni'); cls = 'b-warn'; }
+      else { label = 'Tra ' + it.d + ' giorni'; cls = 'b-info'; }
+      return '<li><div><div class="who">' + esc(it.r.nome) + '</div><div class="when">Fine servizio: ' + fmtDate(it.r.partenza) + '</div></div><span class="badge ' + cls + '">' + label + '</span></li>';
+    }).join('');
+  }
+
+  function statoClass(s) {
+    return { 'Attivo': 'b-good', 'In attesa': 'b-warn', 'Completato': 'b-info', 'Ritirato': 'b-bad' }[s] || 'b-mute';
+  }
+
+  function renderRagazzi() {
+    var tb = $('ragazzi-table-body');
+    if (!state.ragazzi.length) {
+      tb.innerHTML = '<tr><td colspan="6" class="empty">Nessun ragazzo registrato. Usa "Nuovo ragazzo" per aggiungere il primo.</td></tr>';
+      return;
+    }
+    tb.innerHTML = state.ragazzi.map(function (r) {
+      return '<tr>' +
+        '<td class="strong">' + esc(r.nome) + '</td>' +
+        '<td>' + esc(r.progetto) + '</td>' +
+        '<td class="sub">Dal ' + fmtDate(r.arrivo) + '<br>Al ' + (r.partenza ? fmtDate(r.partenza) : 'indeterminato') + '</td>' +
+        '<td class="sub">' + (esc(r.contatti) || '–') + '</td>' +
+        '<td><span class="badge ' + statoClass(r.stato) + '">' + esc(r.stato) + '</span></td>' +
+        '<td class="num"><button class="icon-btn" type="button" data-act="edit-ragazzo" data-id="' + esc(r.id) + '">Modifica</button>' +
+        '<button class="icon-btn del" type="button" data-act="del-ragazzo" data-id="' + esc(r.id) + '">Elimina</button></td>' +
+        '</tr>';
+    }).join('');
+  }
+
+  function initPresenzeDate() {
+    var inp = $('presenze-data-input');
+    if (!inp.value) inp.value = todayStr();
+    renderPresenze();
+  }
+
+  function renderPresenze() {
+    var date = $('presenze-data-input').value || todayStr();
+    var tb = $('presenze-table-body');
+    var act = attivi();
+    if (!act.length) {
+      tb.innerHTML = '<tr><td colspan="4" class="empty">Nessun ragazzo attivo disponibile per le presenze.</td></tr>';
+      $('presenze-summary-text').textContent = 'Presenti: 0 / 0';
+      return;
+    }
+    tb.innerHTML = act.map(function (r) {
+      var p = getP(date, r.id);
+      return '<tr>' +
+        '<td class="strong">' + esc(r.nome) + '</td>' +
+        '<td class="sub">' + esc(r.progetto) + '</td>' +
+        '<td class="center"><input class="pres" type="checkbox" data-pid="' + esc(r.id) + '" aria-label="Presente: ' + esc(r.nome) + '"' + (p.presente ? ' checked' : '') + '></td>' +
+        '<td><input class="in note-in" type="text" data-nid="' + esc(r.id) + '" value="' + esc(p.note) + '" placeholder="Es. permesso, malattia" aria-label="Note per ' + esc(r.nome) + '"></td>' +
+        '</tr>';
+    }).join('');
+    updatePresenzeSummary();
+  }
+
+  function updatePresenzeSummary() {
+    var date = $('presenze-data-input').value || todayStr();
+    var act = attivi();
+    var n = act.filter(function (r) { return getP(date, r.id).presente; }).length;
+    $('presenze-summary-text').textContent = 'Presenti il ' + fmtDate(date) + ': ' + n + ' / ' + act.length;
+  }
+
+  function renderCassa() {
+    var tb = $('cassa-table-body');
+    var tot = cassaTotals();
+    $('cassa-entrate').textContent = eur(tot.entrate);
+    $('cassa-uscite').textContent = eur(tot.uscite);
+    var st = $('cassa-saldo-totale');
+    st.textContent = eur(tot.saldo);
+    st.style.color = tot.saldo >= 0 ? 'var(--good)' : 'var(--bad)';
+
+    if (!state.cassa.length) {
+      tb.innerHTML = '<tr><td colspan="6" class="empty">Nessun movimento registrato.</td></tr>';
+      return;
+    }
+    var rows = state.cassa.slice().sort(function (a, b) { return a.data < b.data ? 1 : a.data > b.data ? -1 : 0; });
+    tb.innerHTML = rows.map(function (c) {
+      var e = c.tipo === 'Entrata';
+      return '<tr>' +
+        '<td class="sub">' + fmtDate(c.data) + '</td>' +
+        '<td><span class="badge ' + (e ? 'b-good' : 'b-bad') + '">' + esc(c.tipo) + '</span></td>' +
+        '<td class="strong">' + esc(c.categoria) + '</td>' +
+        '<td>' + esc(c.descrizione) + '</td>' +
+        '<td class="num ' + (e ? 'pos' : 'neg') + '">' + (e ? '+ ' : '− ') + eur(c.importo) + '</td>' +
+        '<td class="num"><button class="icon-btn del" type="button" data-act="del-cassa" data-id="' + esc(c.id) + '">Elimina</button></td>' +
+        '</tr>';
+    }).join('');
+  }
+
+  /* ---------- Modali ---------- */
+  function show(id) { $(id).hidden = false; }
+  function hide(id) { $(id).hidden = true; }
+  function closeAll() { ['modal-ragazzo', 'modal-cassa', 'modal-confirm', 'modal-data'].forEach(hide); pendingConfirm = null; }
+
+  var pendingConfirm = null;
+  function askConfirm(msg, fn) {
+    $('cf-msg').textContent = msg;
+    pendingConfirm = fn;
+    show('modal-confirm');
+  }
+
+  function openRagazzo(id) {
+    $('form-ragazzo').reset();
+    $('ragazzo-id').value = '';
+    $('ragazzo-err').textContent = '';
+    var r = id ? state.ragazzi.find(function (x) { return x.id === id; }) : null;
+    if (r) {
+      $('modal-ragazzo-title').textContent = 'Modifica ragazzo';
+      $('ragazzo-id').value = r.id;
+      $('ragazzo-nome').value = r.nome;
+      $('ragazzo-progetto').value = r.progetto;
+      $('ragazzo-arrivo').value = r.arrivo || '';
+      $('ragazzo-partenza').value = r.partenza || '';
+      $('ragazzo-contatti').value = r.contatti || '';
+      $('ragazzo-stato').value = r.stato;
+    } else {
+      $('modal-ragazzo-title').textContent = 'Aggiungi nuovo ragazzo';
+      $('ragazzo-arrivo').value = todayStr();
+    }
+    show('modal-ragazzo');
+    $('ragazzo-nome').focus();
+  }
+
+  function openCassa() {
+    $('form-cassa').reset();
+    $('cassa-data').value = todayStr();
+    show('modal-cassa');
+    $('cassa-categoria').focus();
+  }
+
+  function openData(opts) {
+    $('dd-title').textContent = opts.title;
+    $('dd-hint').textContent = opts.hint;
+    $('dd-text').value = opts.text;
+    $('dd-text').readOnly = !opts.restore;
+    $('dd-err').textContent = '';
+    $('dd-file-row').hidden = !opts.restore;
+    $('dd-restore').hidden = !opts.restore;
+    $('dd-file').value = '';
+    show('modal-data');
+    var ta = $('dd-text');
+    ta.focus();
+    if (!opts.restore) ta.select();
+  }
+
+  function tsv(rows) {
+    return rows.map(function (r) {
+      return r.map(function (c) { return String(c == null ? '' : c).replace(/[\t\r\n]+/g, ' '); }).join('\t');
+    }).join('\n');
+  }
+
+  /* ---------- Salvataggi ---------- */
+  $('form-ragazzo').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var id = $('ragazzo-id').value;
+    var data = {
+      id: id || 'r_' + Date.now(),
+      nome: $('ragazzo-nome').value.trim(),
+      progetto: $('ragazzo-progetto').value.trim(),
+      arrivo: $('ragazzo-arrivo').value,
+      partenza: $('ragazzo-partenza').value,
+      contatti: $('ragazzo-contatti').value.trim(),
+      stato: $('ragazzo-stato').value
+    };
+    if (data.partenza && data.partenza < data.arrivo) {
+      $('ragazzo-err').textContent = 'La data di partenza non può essere precedente all\'arrivo.';
+      return;
+    }
+    if (id) {
+      var i = state.ragazzi.findIndex(function (x) { return x.id === id; });
+      if (i !== -1) state.ragazzi[i] = data;
+    } else {
+      state.ragazzi.push(data);
+    }
+    persist();
+    renderAll();
+    hide('modal-ragazzo');
+    toast(id ? 'Ragazzo aggiornato' : 'Ragazzo aggiunto');
+  });
+
+  $('form-cassa').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var imp = parseFloat($('cassa-importo').value);
+    if (!(imp > 0)) { toast('Inserisci un importo maggiore di zero'); return; }
+    state.cassa.push({
+      id: 'c_' + Date.now(),
+      tipo: $('cassa-tipo').value,
+      data: $('cassa-data').value,
+      categoria: $('cassa-categoria').value.trim(),
+      importo: imp,
+      descrizione: $('cassa-descrizione').value.trim()
+    });
+    persist();
+    renderAll();
+    hide('modal-cassa');
+    toast('Movimento registrato');
+  });
+
+  /* ---------- Eventi ---------- */
+  document.addEventListener('click', function (e) {
+    var tab = e.target.closest('[data-tab]');
+    if (tab) { switchTab(tab.dataset.tab); return; }
+    if (e.target.classList && e.target.classList.contains('overlay')) { closeAll(); return; }
+
+    var el = e.target.closest('[data-act]');
+    if (!el) return;
+    var act = el.dataset.act, id = el.dataset.id;
+
+    switch (act) {
+      case 'new-ragazzo': switchTab('ragazzi'); openRagazzo(null); break;
+      case 'edit-ragazzo': openRagazzo(id); break;
+      case 'del-ragazzo':
+        askConfirm('Vuoi eliminare questo ragazzo? Le sue presenze registrate restano nell\'archivio.', function () {
+          state.ragazzi = state.ragazzi.filter(function (x) { return x.id !== id; });
+          persist(); renderAll(); toast('Ragazzo eliminato');
+        });
+        break;
+      case 'new-cassa': openCassa(); break;
+      case 'del-cassa':
+        askConfirm('Vuoi eliminare questo movimento di cassa?', function () {
+          state.cassa = state.cassa.filter(function (x) { return x.id !== id; });
+          persist(); renderAll(); toast('Movimento eliminato');
+        });
+        break;
+      case 'close-modal': closeAll(); break;
+      case 'cf-no': closeAll(); break;
+      case 'cf-yes':
+        var fn = pendingConfirm;
+        closeAll();
+        if (fn) fn();
+        break;
+      case 'mark-all':
+        var date = $('presenze-data-input').value || todayStr();
+        var val = el.dataset.val === '1';
+        attivi().forEach(function (r) { setP(date, r.id, { presente: val }); });
+        persist(); renderPresenze(); renderDashboard();
+        break;
+      case 'save-presenze':
+        var d2 = $('presenze-data-input').value || todayStr();
+        attivi().forEach(function (r) { var p = getP(d2, r.id); setP(d2, r.id, { presente: p.presente, note: p.note }); });
+        persist(); renderDashboard();
+        toast('Presenze del ' + fmtDate(d2) + ' salvate');
+        break;
+      case 'clear-all':
+        askConfirm('Vuoi cancellare tutti i dati (ragazzi, presenze e cassa) e ripartire da zero?', function () {
+          state = { demo: false, ragazzi: [], presenze: {}, cassa: [] };
+          persist(); renderAll(); toast('Dati svuotati');
+        });
+        break;
+      case 'export-ragazzi':
+        openData({
+          title: 'Anagrafica per Excel',
+          hint: 'Copia il testo e incollalo in una cella di Excel o Fogli Google: le colonne si dividono da sole.',
+          text: tsv([['Nome', 'Progetto', 'Arrivo', 'Partenza', 'Contatti', 'Stato']].concat(
+            state.ragazzi.map(function (r) { return [r.nome, r.progetto, r.arrivo, r.partenza || '', r.contatti || '', r.stato]; })
+          )),
+          restore: false
+        });
+        break;
+      case 'export-cassa':
+        var rows = [['Data', 'Tipo', 'Categoria', 'Descrizione', 'Importo']];
+        var s = 0;
+        state.cassa.forEach(function (c) {
+          var v = c.tipo === 'Entrata' ? Number(c.importo) : -Number(c.importo);
+          s += v;
+          rows.push([c.data, c.tipo, c.categoria, c.descrizione, v.toFixed(2).replace('.', ',')]);
+        });
+        rows.push(['', '', '', 'SALDO TOTALE', s.toFixed(2).replace('.', ',')]);
+        openData({
+          title: 'Registro cassa per Excel',
+          hint: 'Copia il testo e incollalo in una cella di Excel o Fogli Google: le colonne si dividono da sole.',
+          text: tsv(rows),
+          restore: false
+        });
+        break;
+      case 'open-backup':
+        openData({
+          title: 'Backup e ripristino',
+          hint: 'Per fare un backup, copia questo testo e conservalo in un file. Per ripristinare, incolla qui un backup oppure caricalo da file, poi premi Ripristina.',
+          text: JSON.stringify(state, null, 2),
+          restore: true
+        });
+        break;
+      case 'copy-data':
+        var ta = $('dd-text');
+        var done = function () { toast('Copiato negli appunti'); };
+        var fallback = function () { ta.focus(); ta.select(); toast('Seleziona il testo e copialo con Ctrl+C'); };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(ta.value).then(done, fallback);
+        } else { fallback(); }
+        break;
+      case 'restore':
+        try {
+          var parsed = JSON.parse($('dd-text').value);
+          if (parsed && Array.isArray(parsed.ragazzi) && Array.isArray(parsed.cassa)) {
+            parsed.presenze = parsed.presenze || {};
+            state = parsed;
+            persist(); renderAll(); closeAll();
+            toast('Dati ripristinati');
+          } else {
+            $('dd-err').textContent = 'Il testo non è un backup valido di CivicManager.';
+          }
+        } catch (err) {
+          $('dd-err').textContent = 'Non riesco a leggere il testo. Controlla che sia un backup JSON completo.';
+        }
+        break;
+    }
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeAll();
+  });
+
+  $('dd-file').addEventListener('change', function (e) {
+    var f = e.target.files[0];
+    if (!f) return;
+    var rd = new FileReader();
+    rd.onload = function (ev) { $('dd-text').value = String(ev.target.result); $('dd-err').textContent = ''; };
+    rd.onerror = function () { $('dd-err').textContent = 'Impossibile leggere il file.'; };
+    rd.readAsText(f);
+  });
+
+  $('presenze-data-input').addEventListener('change', renderPresenze);
+
+  $('presenze-table-body').addEventListener('change', function (e) {
+    var date = $('presenze-data-input').value || todayStr();
+    var t = e.target;
+    if (t.dataset.pid) {
+      setP(date, t.dataset.pid, { presente: t.checked });
+      persist(); updatePresenzeSummary(); renderDashboard();
+    } else if (t.dataset.nid) {
+      setP(date, t.dataset.nid, { note: t.value });
+      persist();
+    }
+  });
+
+  /* ---------- Avvio ---------- */
+  load();
+  renderAll();
+  if (!storageOk) {
+    toast('Il browser non permette di salvare i dati: usa Backup e ripristino per conservarli.');
+  }
+})();
+</script>
+
+</body></html>
